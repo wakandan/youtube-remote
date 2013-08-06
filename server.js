@@ -21,7 +21,6 @@ var local_address = function(){
       var alias=0;
       ifaces[dev].forEach(function(details){
         if (details.family==='IPv4' && details.address!=='127.0.0.1' && details.address!=='localhost') {
-          console.log(details.address);
           result = 'http://'+details.address+':'+port_number;
           return;
         } else  
@@ -32,7 +31,6 @@ var local_address = function(){
 }();
 
 console.log('target ip address: '+local_address);
-
   
 app.listen(port_number);
 
@@ -67,15 +65,17 @@ var randomID= function() {
 io.sockets.on("connection", function(socket){
   socket.on("screen_connect", function(data, fn){
     var id = data.screen_id;
+    //the screen is available for controlling
     if(id in clients){
-      if(! (id in controlsReverse)){
-        controlsReverse[id] = socket.id;
-        controls[socket.id] = id;
-        fn(true);
-      } else {
-        console.log("#######")
-        fn(false);
-      }
+      //if(! (id in controlsReverse)){
+      //  controlsReverse[id] = socket.id;
+      //  controls[socket.id] = id;
+      //  fn(true);
+      //} else {
+      //  console.log("#######")
+      //  fn(false);
+      //}
+      fn(true);
     } else {
       console.log("*******")
       fn(false);
