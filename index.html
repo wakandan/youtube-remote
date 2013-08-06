@@ -12,10 +12,6 @@
           var ytplayer = null;
           var currentVideo = null;
          
-          socket.emit("get_id", function(id){
-            $("#screen-id").text("Screen ID: " + id);
-          });
-          
           socket.on("msg", function(data){
             if(data.action === "play") {
               if(currentVideo === null || data.value !== currentVideo) {

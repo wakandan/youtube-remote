@@ -9,22 +9,6 @@
       var yDataApi = "http://gdata.youtube.com/feeds/api/videos";
       var screenID = null;
       
-      $("#search").hide();
-      
-      $("#set-screen").submit(function(){
-        var id = $("#screen_id").val();
-        socket.emit("screen_connect", {"screen_id": id}, function(result){
-          if(result) {
-            screenID = id;
-            $("#screen-connect").hide();
-            $("#search").show();
-          } else {
-            alert("Screen unavailable");
-          }
-        });
-        return false;
-      });
-      
       $("#youtube-search").submit(function(){
         var query = $("#query").val();
         $.getJSON(yDataApi + '?q=' + query + '&alt=json-in-script&callback=?', function(data) {
@@ -59,13 +43,6 @@
   </script>
 </head>
 <body>
-<div id="screen-connect">
-  <form id="set-screen">
-    <label>Set Screen ID</label>
-    <input type="text" name="screen_id" id="screen_id"/>
-    <input type="submit" value="Connect"/>
-  </form>
-</div>
 <div id="search">
   <form id="youtube-search">
     <label>Search Videos</label>
