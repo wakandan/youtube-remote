@@ -7,37 +7,55 @@ var http = require('http')
   , clientsReverse = {}
   , controls = {}
   , controlsReverse = {}
+  , template = require('swig')
+  , os = require('os')
+
+var index_page = template.compileFile(__dirname+'/index.html')
+var remote_page = template.compileFile(__dirname+'/remote.html')
+var port_number = 9999;
+
+var local_address = function(){
+    var ifaces=os.networkInterfaces();
+    var result = 'http://localhost:'+port_number;
+    for (var dev in ifaces) {
+      var alias=0;
+      ifaces[dev].forEach(function(details){
+        if (details.family==='IPv4' && details.address!=='127.0.0.1' && details.address!=='localhost') {
+          console.log(details.address);
+          result = 'http://'+details.address+':'+port_number;
+          return;
+        } else  
+          ++alias;
+      });
+    }
+    return result;
+}();
+
+console.log('target ip address: '+local_address);
+
   
-app.listen(8080);
+app.listen(port_number);
 
 function handler (req, res) {
   var url_parts = url.parse(req.url, true);
   var query = url_parts.query;
   var pathname = url_parts.pathname;
   
-  if(pathname == '/') {
-    ouput_html(res, "index.html");
+  res.writeHead("Content-Type", "text/html")
+  res.writeHead(200);
+  if(pathname === '/' || pathname==='index.html') {
+    res.end(index_page.render({
+        local_address: local_address
+    }));
   } else if(pathname == '/remote.html'){
-      ouput_html(res, "remote.html");
+      res.end(remote_page.render({
+        local_address: local_address
+      }));
   } else {
     res.writeHead(404);
     res.end();
   }
   
-}
-
-function ouput_html(res, filename) {
-  fs.readFile(__dirname + '/' + filename,
-    function (err, data) {
-      if (err) {
-        res.writeHead(500);
-        return res.end('Error loading index.html');
-      }
-      res.writeHead("Content-Type", "text/html")
-      res.writeHead(200);
-      res.end(data);
-    }
-  );
 }
 
 var randomID= function() {

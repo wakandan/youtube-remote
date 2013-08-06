@@ -8,22 +8,22 @@
 	</script> 
 	<script type="text/javascript">
 	  $(document).ready(function(){
-      var socket = io.connect("http://localhost:8080");
-      var ytplayer = null;
-      var currentVideo = null;
-      
-      socket.emit("get_id", function(id){
-        $("#screen-id").text("Screen ID: " + id);
-      });
-      
-      socket.on("msg", function(data){
-        if(data.action === "play") {
-          if(currentVideo === null || data.value !== currentVideo) {
-            currentVideo = data.value;
-      	    loadVideo(data.value);
-    	    }
-  	    }
-  	  });
+          var socket = io.connect("{{local_address}}");
+          var ytplayer = null;
+          var currentVideo = null;
+         
+          socket.emit("get_id", function(id){
+            $("#screen-id").text("Screen ID: " + id);
+          });
+          
+          socket.on("msg", function(data){
+            if(data.action === "play") {
+              if(currentVideo === null || data.value !== currentVideo) {
+                currentVideo = data.value;
+                loadVideo(data.value);
+                }
+            }
+          });
 	  });
 	  
 	  // Loads the selected video into the player.
